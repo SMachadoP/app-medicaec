@@ -29,18 +29,6 @@ public class CitaON {
 
 	
 	
-	/*public void guardarCita(Cita c) {
-		 if (c.getId() == null) {
-			 daoCita.insert(c);
-		    } else {
-		        Cita aux = daoCita.read(c.getId());
-		        if (aux == null)
-		        	daoCita.insert(c);
-		        else
-		        	daoCita.update(c);
-		    }
-	}*/
-	
 	public void guardarCita(Cita c) throws Exception {
 	    if (c == null) {
 	        throw new Exception("Cita nula");

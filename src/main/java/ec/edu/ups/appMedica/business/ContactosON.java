@@ -81,6 +81,7 @@ public class ContactosON {
         usuarioBD.setTelefono(datosActualizados.getTelefono());
         usuarioBD.setDireccion(datosActualizados.getDireccion());
         usuarioBD.setGenero(datosActualizados.getGenero());
+        usuarioBD.setEspecialidad(datosActualizados.getEspecialidad());
         // setea más campos si hay
 
         daoUsuario.update(usuarioBD);

@@ -213,6 +213,7 @@
             <scope>test</scope>
         </dependency>
 
+
         <!-- Optional, but highly recommended -->
         <!-- Arquillian allows you to test enterprise code such as EJBs and
             Transactional(JTA) JPA from JUnit/TestNG -->

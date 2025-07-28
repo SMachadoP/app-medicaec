@@ -61,7 +61,6 @@ public class UsuarioDAO {
 	    return query.getResultList();
 	}
 
-
 	public List<Usuario> getUsuarioPorCedula(String cedula) {
 	    String jpql = "SELECT u FROM Usuario u WHERE u.cedula LIKE :cedula";
 	    TypedQuery<Usuario> q = em.createQuery(jpql, Usuario.class);
@@ -69,5 +68,10 @@ public class UsuarioDAO {
 	    return q.getResultList();
 	}
 	
+	public List<Usuario> getMedicos() {
+	    String jpql = "SELECT u FROM Usuario u WHERE u.rol = 'admin'";
+	    TypedQuery<Usuario> q = em.createQuery(jpql, Usuario.class);
+	    return q.getResultList();
+	}
 
 }

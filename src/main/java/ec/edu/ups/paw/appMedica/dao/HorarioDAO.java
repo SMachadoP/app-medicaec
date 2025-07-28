@@ -45,7 +45,5 @@ public class HorarioDAO {
 	    TypedQuery<Horario> q = em.createQuery(jpql, Horario.class);
 	    q.setParameter("idMedico", idMedico);
 	    return q.getResultList();   
-	}
-	
-	
+	}	
 }

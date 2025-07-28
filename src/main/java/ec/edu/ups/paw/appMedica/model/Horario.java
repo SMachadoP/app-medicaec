@@ -59,7 +59,4 @@ public class Horario implements Serializable{
 	public String toString() {
 		return "Horario [id=" + id + ", fecha=" + fecha + ", disponible=" + disponible + ", medico=" + medico + "]";
 	}
-	
-	
-
 }

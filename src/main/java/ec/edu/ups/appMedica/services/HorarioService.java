@@ -25,12 +25,15 @@ public class HorarioService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addHorario(Horario h) {
-		try {
-			onHorario.guardarHorario(h);
-			return Response.ok("guardado satisfactorio").build();
-		}catch(Exception e) {
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).tag("Error").build();
-		}
+	    try {
+	        onHorario.guardarHorario(h);
+	        return Response.ok("guardado satisfactorio").build();
+	    } catch (Exception e) {
+	        e.printStackTrace(); // <--- Para ver la traza del error en consola
+	        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+	                       .entity("Error interno: " + e.getMessage())
+	                       .build();
+	    }
 	}
 	
 	@GET
@@ -53,11 +56,35 @@ public class HorarioService {
 	    } catch (Exception e) {
 	        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Respuesta("error", e.getMessage())).build();
 	    }
+	}	
+
+
+	@POST
+	@Path("/agregar")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response agregarHorario(Horario horario) {
+	    try {
+	    	onHorario.guardarHorario(horario);
+	        return Response.ok().build();
+	    } catch (Exception e) {
+	        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+	                       .entity("Error al guardar el horario").build();
+	    }
 	}
-	
-	
-	
-	
 
 	
+	@POST
+	@Path("/generar")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response generarHorariosDefecto() {
+	    try {
+	        onHorario.generarHorariosPorDefecto();
+	        return Response.ok(new Respuesta("ok", "Horarios generados correctamente")).build();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+	                .entity(new Respuesta("error", e.getMessage())).build();
+	    }
+	}
+
 }

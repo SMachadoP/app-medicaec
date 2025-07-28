@@ -69,6 +69,7 @@ public class InicializarBD {
 		sm.setGenero("Masculino");
 		//medico.setEspecialidad(especialidad2);
 		
+		
 		Usuario paciente = new Usuario();
 		paciente.setNombre("Jordy Espinoza");
 		paciente.setCorreo("jordy@gmail.com");
