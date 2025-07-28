@@ -2,6 +2,7 @@ package ec.edu.ups.paw.appMedica.dao;
 
 import java.util.List;
 
+import ec.edu.ups.paw.appMedica.model.Cita;
 import ec.edu.ups.paw.appMedica.model.Horario;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
@@ -38,4 +39,13 @@ public class HorarioDAO {
 		TypedQuery<Horario> q = em.createQuery(jpql, Horario.class);
 		return q.getResultList();
 	}
+	
+	public List<Horario> getHorarioPorIdMedico(Integer idMedico) {
+	    String jpql = "SELECT h FROM Horario h WHERE h.medico.id = :idMedico";
+	    TypedQuery<Horario> q = em.createQuery(jpql, Horario.class);
+	    q.setParameter("idMedico", idMedico);
+	    return q.getResultList();   
+	}
+	
+	
 }

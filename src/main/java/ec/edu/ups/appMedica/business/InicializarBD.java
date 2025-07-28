@@ -59,12 +59,14 @@ public class InicializarBD {
 		medico.setRol("admin");
 		medico.setEspecialidad(especialidad);
 		
-		Usuario medico2 = new Usuario();
-		medico.setNombre("Sebastian Machado");
-		medico.setCorreo("salejomac1210@gmail.com");
-		medico.setTelefono("0982285740");
-		medico.setCedula("0605483080");
-		medico.setRol("paciente");
+		Usuario sm = new Usuario();
+		sm.setNombre("Sebastian Machado");
+		sm.setCorreo("salejomac1210@gmail.com");
+		sm.setTelefono("0982285740");
+		sm.setCedula("0605483080");
+		sm.setRol("paciente");
+		sm.setDireccion("Av. Loja");
+		sm.setGenero("Masculino");
 		//medico.setEspecialidad(especialidad2);
 		
 		Usuario paciente = new Usuario();
@@ -77,7 +79,7 @@ public class InicializarBD {
 		paciente.setGenero("Masculino");
 		
 		daoUsuario.insert(medico);
-		daoUsuario.insert(medico2);
+		daoUsuario.insert(sm);
 		daoUsuario.insert(paciente);
 		
 		List<Usuario> usuarios = daoUsuario.getAll();
@@ -98,6 +100,19 @@ public class InicializarBD {
 		
 		daoHorario.insert(horario);
 		
+		Horario horario2 = new Horario();
+		try {
+		    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+		    Date fecha2 = sdf.parse("30-09-2025 18:00");
+		    horario2.setFecha(fecha2);
+		} catch (ParseException e) {
+		    e.printStackTrace();
+		}
+		horario2.setDisponible(true);
+		horario2.setMedico(medico);
+		
+		daoHorario.insert(horario2);
+		
 		List<Horario> horarios = daoHorario.getAll();
 		for(Horario h : horarios){
 			System.out.println(h.toString() + "| ID generado: " + h.getId());
@@ -115,7 +130,7 @@ public class InicializarBD {
 		cita.setEspecialidad(especialidad);
 		cita.setHorario(horario);
 		cita.setMedico(medico);
-		cita.setPaciente(paciente);
+		cita.setPaciente(sm);
 		
 		daoCita.insert(cita);
 		

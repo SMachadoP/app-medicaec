@@ -8,6 +8,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -84,6 +85,41 @@ public class UsuarioService {
 	        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Respuesta("error", e.getMessage())).build();
 	    }
 	}
+	
+	@PUT
+	@Path("correo/{correo}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response actualizarPorCorreo(@PathParam("correo") String correo, Usuario u) {
+	    try {
+	        onContactos.actualizarUsuarioPorCorreo(correo, u);
+	        return Response.ok("Usuario actualizado correctamente").build();
+	    } catch (Exception e) {
+	        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+	                       .entity(new Respuesta("error", e.getMessage()))
+	                       .build();
+	    }
+	}
+	
+	@GET
+	@Path("/medicoespecialidad/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getMedicosPorEspecialidad(@PathParam("id") int idEspecialidad) {
+	    try {
+	        List<Usuario> medicos = onContactos.getMedicoPorEspecialidad(idEspecialidad);
+	        if (medicos.isEmpty()) {
+	            return Response.status(Response.Status.NOT_FOUND)
+	                           .entity(new Respuesta("error", "No se encontraron médicos con esa especialidad"))
+	                           .build();
+	        }
+	        return Response.ok(medicos).build();
+	    } catch (Exception e) {
+	        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+	                       .entity(new Respuesta("error", e.getMessage()))
+	                       .build();
+	    }
+	}
+
+
 
 	@GET
 	@Path("/cedula/{cedula}")

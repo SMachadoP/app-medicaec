@@ -53,6 +53,14 @@ public class UsuarioDAO {
 	    q.setParameter("correo", "%" + correo.toLowerCase() + "%");
 	    return q.getResultList();
 	}
+	
+	public List<Usuario> getMedicoPorEspecialidad(int idEspecialidad) {
+	    String jpql = "SELECT u FROM Usuario u WHERE u.especialidad.id = :idEsp";
+	    TypedQuery<Usuario> query = em.createQuery(jpql, Usuario.class);
+	    query.setParameter("idEsp", idEspecialidad);
+	    return query.getResultList();
+	}
+
 
 	public List<Usuario> getUsuarioPorCedula(String cedula) {
 	    String jpql = "SELECT u FROM Usuario u WHERE u.cedula LIKE :cedula";

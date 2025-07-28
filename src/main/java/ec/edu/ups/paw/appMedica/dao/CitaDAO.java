@@ -37,5 +37,12 @@ public class CitaDAO {
 		TypedQuery<Cita> q = em.createQuery(jpql, Cita.class);
 		return q.getResultList();
 	}
+	
+	public List<Cita> getCitaPorIdPaciente(Integer idPaciente) {
+	    String jpql = "SELECT c FROM Cita c WHERE c.paciente.id = :idPaciente";
+	    TypedQuery<Cita> q = em.createQuery(jpql, Cita.class);
+	    q.setParameter("idPaciente", idPaciente);
+	    return q.getResultList();   
+	}
 
 }

@@ -29,6 +29,7 @@ public class ContactosON {
 		return daoUsuario.getAll();
 	}
 	
+	
 	public Usuario getContacto(Integer id) throws Exception {
 	    if (id == null || id <= 0) {
 	        throw new Exception("ID incorrecto");
@@ -36,6 +37,14 @@ public class ContactosON {
 	    return daoUsuario.read(id);
 	}
 	
+	
+
+	public List<Usuario> getMedicoPorEspecialidad(Integer id) throws Exception {
+	    if (id == null || id <= 0) {
+	        throw new Exception("ID incorrecto");
+	    }
+	    return daoUsuario.getMedicoPorEspecialidad(id);
+	}
 	public List<Usuario> getContactoPorNombre(String nombre) throws Exception {
 		if (nombre == null || nombre.trim().isEmpty()) {
             throw new Exception("Nombre inválido");
@@ -56,5 +65,25 @@ public class ContactosON {
         }
 		return daoUsuario.getUsuarioPorCedula(cedula);
 	}
+	
+	
+	
+	public void actualizarUsuarioPorCorreo(String correo, Usuario datosActualizados) throws Exception {
+        List<Usuario> usuarios = daoUsuario.getUsuarioPorCorreo(correo);
+        if (usuarios == null || usuarios.isEmpty()) {
+            throw new Exception("Usuario no encontrado con correo: " + correo);
+        }
+        
+        Usuario usuarioBD = usuarios.get(0);
+        
+        usuarioBD.setNombre(datosActualizados.getNombre());
+        usuarioBD.setCedula(datosActualizados.getCedula());
+        usuarioBD.setTelefono(datosActualizados.getTelefono());
+        usuarioBD.setDireccion(datosActualizados.getDireccion());
+        usuarioBD.setGenero(datosActualizados.getGenero());
+        // setea más campos si hay
+
+        daoUsuario.update(usuarioBD);
+    }
 	
 }
