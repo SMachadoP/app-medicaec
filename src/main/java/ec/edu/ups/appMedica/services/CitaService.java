@@ -1,10 +1,12 @@
 package ec.edu.ups.appMedica.services;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import ec.edu.ups.appMedica.business.CitaON;
 import ec.edu.ups.paw.appMedica.model.Cita;
-import ec.edu.ups.paw.appMedica.model.Usuario;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -12,6 +14,7 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 //import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -21,6 +24,7 @@ public class CitaService {
 	
 	@Inject
 	private CitaON onCitas;
+	private static final SimpleDateFormat ISO_FMT = new SimpleDateFormat("yyyy-MM-dd");
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -57,6 +61,29 @@ public class CitaService {
 	        return Response.ok(citas).build();
 	    } catch (Exception e) {
 	        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Respuesta("error", e.getMessage())).build();
+	    }
+	}
+	
+	@GET
+	@Path("/historial")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response historial(
+	    @QueryParam("pacienteId") Integer pid,
+	    @QueryParam("medicoId")   Integer mid,
+	    @QueryParam("from")       String fromStr,
+	    @QueryParam("to")         String toStr,
+	    @QueryParam("especialidad") Integer esp,
+	    @QueryParam("estado")     String estado
+	) {
+	    try {
+	      Date from = (fromStr != null) ? ISO_FMT.parse(fromStr) : null;
+	      Date to   = (toStr   != null) ? ISO_FMT.parse(toStr)   : null;
+	      List<Cita> lista = onCitas.getHistorial(pid, mid, from, to, esp, estado);
+	      return Response.ok(lista).build();
+	    } catch (ParseException e) {
+	      return Response.status(Response.Status.BAD_REQUEST)
+	                     .entity("Fechas con formato inválido (yyyy-MM-dd)")
+	                     .build();
 	    }
 	}
 	

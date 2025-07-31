@@ -1,5 +1,6 @@
 package ec.edu.ups.appMedica.business;
 
+import java.util.Date;
 import java.util.List;
 
 import ec.edu.ups.paw.appMedica.dao.CitaDAO;
@@ -72,13 +73,9 @@ public class CitaON {
 	    }
 	}
 
-
-
-
 	public List<Cita> getCitas(){
 		return daoCita.getAll();
 	}
-	
 	
 	public List<Cita> getCitaPorIdPaciente(Integer id) throws Exception {
 		if (id == null || id <= 0) {
@@ -86,5 +83,13 @@ public class CitaON {
         }
 		return daoCita.getCitaPorIdPaciente(id);
 	}
+	
+	public List<Cita> getHistorial(
+		    Integer pacienteId, Integer medicoId,
+		    Date from, Date to,
+		    Integer especialidadId, String estado
+		) {
+		    return daoCita.findByFilters(pacienteId, medicoId, from, to, especialidadId, estado);
+		}
 
 }

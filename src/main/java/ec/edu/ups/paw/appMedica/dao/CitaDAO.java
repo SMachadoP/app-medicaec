@@ -1,5 +1,6 @@
 package ec.edu.ups.paw.appMedica.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import ec.edu.ups.paw.appMedica.model.Cita;
@@ -44,5 +45,32 @@ public class CitaDAO {
 	    q.setParameter("idPaciente", idPaciente);
 	    return q.getResultList();   
 	}
+	
+	public List<Cita> findByFilters(
+		    Integer pacienteId,
+		    Integer medicoId,
+		    Date from,
+		    Date to,
+		    Integer especialidadId,
+		    String estado
+		) {
+		    StringBuilder jpql = new StringBuilder("SELECT c FROM Cita c WHERE 1=1");
+		    if (pacienteId != null)      jpql.append(" AND c.paciente.id = :pid");
+		    if (medicoId   != null)      jpql.append(" AND c.medico.id = :mid");
+		    if (from        != null)     jpql.append(" AND c.fecha   >= :from");
+		    if (to          != null)     jpql.append(" AND c.fecha   <= :to");
+		    if (especialidadId != null)  jpql.append(" AND c.especialidad.id = :esp");
+		    if (estado      != null && !estado.isBlank()) jpql.append(" AND c.estado = :est");
+		    
+		    TypedQuery<Cita> q = em.createQuery(jpql.toString(), Cita.class);
+		    if (pacienteId   != null) q.setParameter("pid", pacienteId);
+		    if (medicoId     != null) q.setParameter("mid", medicoId);
+		    if (from          != null) q.setParameter("from", from);
+		    if (to            != null) q.setParameter("to", to);
+		    if (especialidadId != null) q.setParameter("esp", especialidadId);
+		    if (estado        != null && !estado.isBlank()) q.setParameter("est", estado);
+		    return q.getResultList();
+		}
+
 
 }

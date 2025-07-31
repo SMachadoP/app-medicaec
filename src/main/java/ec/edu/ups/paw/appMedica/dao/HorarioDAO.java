@@ -2,7 +2,6 @@ package ec.edu.ups.paw.appMedica.dao;
 
 import java.util.List;
 
-import ec.edu.ups.paw.appMedica.model.Cita;
 import ec.edu.ups.paw.appMedica.model.Horario;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;

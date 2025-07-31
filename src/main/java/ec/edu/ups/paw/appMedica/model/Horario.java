@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Horario implements Serializable{
+	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
