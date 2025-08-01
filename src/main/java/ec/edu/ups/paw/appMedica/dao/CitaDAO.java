@@ -71,6 +71,23 @@ public class CitaDAO {
 		    if (estado        != null && !estado.isBlank()) q.setParameter("est", estado);
 		    return q.getResultList();
 		}
+	
+	public List<Cita> findByMedicoEspecialidadFecha(
+            Integer medicoId, Integer especialidadId, Date desde, Date hasta) {
+
+        String jpql = "SELECT c FROM Cita c "
+                    + "WHERE c.medico.id = :medicoId "
+                    + "  AND c.especialidad.id = :espId "
+                    + "  AND c.fecha BETWEEN :desde AND :hasta "
+                    + "ORDER BY c.fecha";
+
+        TypedQuery<Cita> q = em.createQuery(jpql, Cita.class);
+        q.setParameter("medicoId", medicoId);
+        q.setParameter("espId", especialidadId);
+        q.setParameter("desde", desde);
+        q.setParameter("hasta", hasta);
+        return q.getResultList();
+    }
 
 
 }

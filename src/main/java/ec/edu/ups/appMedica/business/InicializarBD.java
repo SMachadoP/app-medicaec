@@ -60,19 +60,17 @@ public class InicializarBD {
 		medico.setEspecialidad(especialidad);
 		
 		Usuario sm = new Usuario();
-		sm.setNombre("Sebastian Machado");
-		sm.setCorreo("salejomac1210@gmail.com");
-		sm.setTelefono("0982285740");
-		sm.setCedula("0605483080");
-		sm.setRol("paciente");
-		sm.setDireccion("Av. Loja");
-		sm.setGenero("Masculino");
-		//medico.setEspecialidad(especialidad2);
+		sm.setNombre("Sebastian Verdugo");
+		sm.setCorreo("sebastianvccv@gmail.com");
+		sm.setTelefono("0960090320");
+		sm.setCedula("0302517545");
+		sm.setRol("admin");
+		sm.setEspecialidad(especialidad2);
 		
 		
 		Usuario paciente = new Usuario();
-		paciente.setNombre("Jordy Espinoza");
-		paciente.setCorreo("jordy@gmail.com");
+		paciente.setNombre("Programacion Web");
+		paciente.setCorreo("smsvprograweb@gmail.com");
 		paciente.setTelefono("0984756421");
 		paciente.setCedula("0301108312");
 		paciente.setRol("paciente");

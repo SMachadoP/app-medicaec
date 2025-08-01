@@ -12,7 +12,6 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
-//import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -28,9 +27,12 @@ public class UsuarioService {
 	public Response addUsuario(Usuario u) {
 		try {
 			onContactos.guardarUsuario(u);
-			return Response.ok("guardado satisfactorio").build();
+			return Response.ok("{\"status\":\"success\",\"mensaje\":\"Usuario guardado correctamente\"}").build();
 		}catch(Exception e) {
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).tag("Error").build();
+			e.printStackTrace();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.entity("{\"status\":\"error\",\"mensaje\":\"" + e.getMessage() + "\"}")
+					.build();
 		}
 	}
 	
@@ -48,11 +50,16 @@ public class UsuarioService {
 	    try {
 	        Usuario u = onContactos.getContacto(id);
 	        if (u == null) {
-	            return Response.status(Response.Status.NOT_FOUND).entity(new Respuesta("error", "Usuario no existe")).build();
+	            return Response.status(Response.Status.NOT_FOUND)
+	            		.entity("{\"status\":\"error\",\"mensaje\":\"Usuario no existe\"}")
+	            		.build();
 	        }
 	        return Response.ok(u).build();
 	    } catch (Exception e) {
-	        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Respuesta("error", e.getMessage())).build();
+	    	e.printStackTrace();
+	        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+	        		.entity("{\"status\":\"error\",\"mensaje\":\"" + e.getMessage() + "\"}")
+	        		.build();
 	    }
 	}
 	
@@ -63,11 +70,16 @@ public class UsuarioService {
 	    try {
 	        List<Usuario> usuarios = onContactos.getContactoPorNombre(nombre);
 	        if (usuarios.isEmpty()) {
-	            return Response.status(Response.Status.NOT_FOUND).entity(new Respuesta("error", "No se encontraron usuarios con ese nombre")).build();
+	            return Response.status(Response.Status.NOT_FOUND)
+	            		.entity("{\"status\":\"error\",\"mensaje\":\"No se encontraron usuarios con ese nombre\"}")
+	            		.build();
 	        }
 	        return Response.ok(usuarios).build();
 	    } catch (Exception e) {
-	        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Respuesta("error", e.getMessage())).build();
+	    	e.printStackTrace();
+	        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+	        		.entity("{\"status\":\"error\",\"mensaje\":\"" + e.getMessage() + "\"}")
+	        		.build();
 	    }
 	}
 	
@@ -78,24 +90,54 @@ public class UsuarioService {
 	    try {
 	        List<Usuario> usuarios = onContactos.getContactoPorCorreo(correo);
 	        if (usuarios.isEmpty()) {
-	            return Response.status(Response.Status.NOT_FOUND).entity(new Respuesta("error", "No se encontraron usuarios con ese correo")).build();
+	            return Response.status(Response.Status.NOT_FOUND)
+	            		.entity("{\"status\":\"error\",\"mensaje\":\"No se encontraron usuarios con ese correo\"}")
+	            		.build();
 	        }
 	        return Response.ok(usuarios).build();
 	    } catch (Exception e) {
-	        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Respuesta("error", e.getMessage())).build();
+	    	e.printStackTrace();
+	        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+	        		.entity("{\"status\":\"error\",\"mensaje\":\"" + e.getMessage() + "\"}")
+	        		.build();
 	    }
 	}
 	
+	// ¡CORRECCIÓN IMPORTANTE! Agregar la barra diagonal que faltaba
 	@PUT
-	@Path("correo/{correo}")
+	@Path("/correo/{correo}")  // <-- ERA "correo/{correo}" sin la barra inicial
 	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)  // <-- AGREGADO para devolver JSON
 	public Response actualizarPorCorreo(@PathParam("correo") String correo, Usuario u) {
 	    try {
+	        System.out.println("=== DEBUG ACTUALIZAR USUARIO ===");
+	        System.out.println("Correo recibido: " + correo);
+	        System.out.println("Usuario recibido: " + u);
+	        System.out.println("Datos del usuario: " + (u != null ? u.toString() : "null"));
+	        
+	        if (correo == null || correo.trim().isEmpty()) {
+	            return Response.status(Response.Status.BAD_REQUEST)
+	                    .entity("{\"status\":\"error\",\"mensaje\":\"Correo no puede estar vacío\"}")
+	                    .build();
+	        }
+	        
+	        if (u == null) {
+	            return Response.status(Response.Status.BAD_REQUEST)
+	                    .entity("{\"status\":\"error\",\"mensaje\":\"Datos de usuario no pueden estar vacíos\"}")
+	                    .build();
+	        }
+	        
 	        onContactos.actualizarUsuarioPorCorreo(correo, u);
-	        return Response.ok("Usuario actualizado correctamente").build();
+	        System.out.println("Usuario actualizado exitosamente");
+	        
+	        return Response.ok()
+	                .entity("{\"status\":\"success\",\"mensaje\":\"Usuario actualizado correctamente\"}")
+	                .build();
 	    } catch (Exception e) {
+	        e.printStackTrace();
+	        System.out.println("Error al actualizar usuario: " + e.getMessage());
 	        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-	                       .entity(new Respuesta("error", e.getMessage()))
+	                       .entity("{\"status\":\"error\",\"mensaje\":\"" + e.getMessage() + "\"}")
 	                       .build();
 	    }
 	}
@@ -108,18 +150,17 @@ public class UsuarioService {
 	        List<Usuario> medicos = onContactos.getMedicoPorEspecialidad(idEspecialidad);
 	        if (medicos.isEmpty()) {
 	            return Response.status(Response.Status.NOT_FOUND)
-	                           .entity(new Respuesta("error", "No se encontraron médicos con esa especialidad"))
+	                           .entity("{\"status\":\"error\",\"mensaje\":\"No se encontraron médicos con esa especialidad\"}")
 	                           .build();
 	        }
 	        return Response.ok(medicos).build();
 	    } catch (Exception e) {
+	    	e.printStackTrace();
 	        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-	                       .entity(new Respuesta("error", e.getMessage()))
+	                       .entity("{\"status\":\"error\",\"mensaje\":\"" + e.getMessage() + "\"}")
 	                       .build();
 	    }
 	}
-
-
 
 	@GET
 	@Path("/cedula/{cedula}")
@@ -128,11 +169,16 @@ public class UsuarioService {
 	    try {
 	        List<Usuario> usuarios = onContactos.getContactoPorCedula(cedula);
 	        if (usuarios.isEmpty()) {
-	            return Response.status(Response.Status.NOT_FOUND).entity(new Respuesta("error", "No se encontraron usuarios con esa cédula")).build();
+	            return Response.status(Response.Status.NOT_FOUND)
+	            		.entity("{\"status\":\"error\",\"mensaje\":\"No se encontraron usuarios con esa cédula\"}")
+	            		.build();
 	        }
 	        return Response.ok(usuarios).build();
 	    } catch (Exception e) {
-	        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Respuesta("error", e.getMessage())).build();
+	    	e.printStackTrace();
+	        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+	        		.entity("{\"status\":\"error\",\"mensaje\":\"" + e.getMessage() + "\"}")
+	        		.build();
 	    }
 	}
 }

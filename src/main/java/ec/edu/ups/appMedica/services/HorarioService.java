@@ -7,6 +7,7 @@ import ec.edu.ups.paw.appMedica.model.Horario;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
@@ -84,6 +85,45 @@ public class HorarioService {
 	        e.printStackTrace();
 	        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
 	                .entity(new Respuesta("error", e.getMessage())).build();
+	    }
+	}
+	
+	@PATCH
+	@Path("/{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateHorario(@PathParam("id") Integer id, Horario horarioActualizado) {
+	    try {
+	        // Buscar el horario existente
+	        Horario horarioExistente = null;
+	        for (Horario h : onHorario.getHorarios()) {
+	            if (h.getId().equals(id)) {
+	                horarioExistente = h;
+	                break;
+	            }
+	        }
+	        
+	        if (horarioExistente == null) {
+	            return Response.status(Response.Status.NOT_FOUND)
+	                .entity("{\"status\":\"error\",\"mensaje\":\"Horario no encontrado\"}")
+	                .build();
+	        }
+	        
+	        // Actualizar solo los campos que no son nulos
+	        if (horarioActualizado.getDisponible() != null) {
+	            horarioExistente.setDisponible(horarioActualizado.getDisponible());
+	        }
+	        
+	        onHorario.guardarHorario(horarioExistente);
+	        return Response.ok()
+	                .entity("{\"status\":\"success\",\"mensaje\":\"Horario actualizado correctamente\"}")
+	                .build();
+	        
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+	            .entity("{\"status\":\"error\",\"mensaje\":\"" + e.getMessage() + "\"}")
+	            .build();
 	    }
 	}
 
